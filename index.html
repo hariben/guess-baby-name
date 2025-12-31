@@ -872,7 +872,26 @@ Hariram and Sushme (heart)
       const overlay = $('#winOverlay');
       const imgEl = $('#overlayImg');
       const titleEl = $('#overlayTitle');
-      if(titleEl) titleEl.textContent = guessed ? `You guessed it! It's ${State.secret}.` : `The name is ${State.secret}.`;
+      if(titleEl){
+        const tries = guessed ? (State.row + 1) : CONFIG.MAX_GUESSES;
+        let line1 = '';
+        if(!guessed){
+          line1 = "Such a good sport for participating in this game! Here's our final reveal!";
+        } else {
+          switch(tries){
+            case 1: line1 = "Hello, seems you already knew our kutty's name or already played the game!"; break;
+            case 2: line1 = "You are lucky and smart! Just 2 tries!! 🎉🎉"; break;
+            case 3: line1 = "You are the master of this game! 3 tries from you and 3 hurrays for you!!! 🎉🎉🎉"; break;
+            case 4: line1 = "4th try it is! Yaay, you did it!! 🎉"; break;
+            case 5: line1 = "5th try! Can't get better! good game!! 🎉"; break;
+            case 6: line1 = "Right on the last valid try! great game!! 🎉"; break;
+            case 7: line1 = "Winning in super over! Hurray!! 🎉🎉"; break;
+            default: line1 = "Yaay, you did it! 🎉";
+          }
+        }
+        const line2 = `YES, Our baby's name is ${State.secret} 💜`;
+        titleEl.innerHTML = `<div>${line1}</div><div>${line2}</div>`;
+      }
       if(imgEl){
         const baseRaw = (State.imageBase && State.imageBase.trim().length) ? State.imageBase.trim() : 'say_my_name';
         const base = (baseRaw.replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '') || 'say_my_name');
