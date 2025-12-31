@@ -338,7 +338,7 @@ Hariram and Sushme (heart)
         </div>
         <div style="flex:1 1 220px; min-width:220px">
           <label for="imageBaseInput">Reveal image name (assets/*.jpg)</label>
-          <input id="imageBaseInput" type="text" placeholder="e.g., default or reveal" value="default" autocomplete="off">
+          <input id="imageBaseInput" type="text" placeholder="e.g., default or reveal" value="say_my_name" autocomplete="off">
         </div>
         <div style="flex:0 1 180px; min-width:160px">
           <label for="themeSelect">Theme</label>
@@ -536,7 +536,7 @@ Hariram and Sushme (heart)
       revealUsed: false,
       over: false,
       message: '',
-      imageBase: 'default',
+      imageBase: 'say_my_name',
       rulesLang: 'en',
       msgEditEnabled: false,
       msgUseCustom: false,
@@ -874,8 +874,8 @@ Hariram and Sushme (heart)
       const titleEl = $('#overlayTitle');
       if(titleEl) titleEl.textContent = guessed ? `You guessed it! It's ${State.secret}.` : `The name is ${State.secret}.`;
       if(imgEl){
-        const baseRaw = (State.imageBase && State.imageBase.trim().length) ? State.imageBase.trim() : 'default';
-        const base = (baseRaw.replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '') || 'default');
+        const baseRaw = (State.imageBase && State.imageBase.trim().length) ? State.imageBase.trim() : 'say_my_name';
+        const base = (baseRaw.replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '') || 'say_my_name');
         const src = `./assets/${base}.jpg`;
         imgEl.onerror = ()=>{ imgEl.style.display='none'; };
         imgEl.src = src;
@@ -975,7 +975,7 @@ Hariram and Sushme (heart)
         const msgEl = document.getElementById('messageInput');
         const imgBaseEl = document.getElementById('imageBaseInput');
         if(msgEl) State.message = (msgEl.value||'').trim();
-        if(imgBaseEl) State.imageBase = ((imgBaseEl.value||'default').trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'default';
+        if(imgBaseEl) State.imageBase = ((imgBaseEl.value||'say_my_name').trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'say_my_name';
       }
       State.row = 0; State.col = 0; State.over = false;
       State.revealUsed = false; State.lockedFirst = false;
@@ -1120,7 +1120,7 @@ Hariram and Sushme (heart)
       const m = getParam('m');
       const b = getParam('b');
       if(m){ try{ State.message = b64urlDecode(m); }catch{} }
-      if(b){ State.imageBase = (b.trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'default'; }
+      if(b){ State.imageBase = (b.trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'say_my_name'; }
       renderMessagePanel();
       if(p){
         const name = decodeSecret(p);
