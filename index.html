@@ -243,7 +243,7 @@
     /* Mobile layout adjustments: keep content within container and show themed sides */
     @media (max-width: 640px){
       body{ overflow-x:hidden; }
-      .container{ width:70vw; margin:0 auto; }
+      .container{ width:85vw; margin:0 auto; }
       header{ gap:8px; }
       h1{ font-size: clamp(18px, 5.5vw, 26px); }
       .panel{ padding:14px; }
@@ -251,13 +251,13 @@
       #rules-panel .rules-header{ font-size: 15px; }
       #rules-panel .rules-list li{ font-size: clamp(12px, 3.2vw, 15px); line-height: 1.35; }
       .segmented .seg{ padding:5px 8px; font-size:13px; }
-      #board{ width:100%; gap:5px; }
+      #board{ width:100%; gap:5px; margin:12px auto 0; }
       .board-row{ gap:5px; }
       .tile{ height:auto; aspect-ratio:1/1; font-size: clamp(12px, 3.6vw, 20px); border-radius:7px; border-width:1.5px; }
-      #keyboard{ width:100%; margin:12px auto 8px; }
+      #keyboard{ width:100%; margin:0 auto 12px; }
       .kbd-row{ gap:3px; flex-wrap: nowrap; }
-      .key{ padding:7px 5px; min-width:20px; border-radius:8px; font-size: clamp(10px, 2.8vw, 12px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:40px; }
+      .key{ padding:9.5px 7.5px; min-width:25px; border-radius:8px; font-size: clamp(12.6px, 3.6vw, 14.7px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:50px; }
     }
 
     @media (max-width: 480px){
@@ -267,12 +267,13 @@
       #rules-panel .rules-header{ font-size: 14px; }
       #rules-panel .rules-list li{ font-size: clamp(11px, 3.6vw, 14px); }
       .segmented .seg{ padding:4px 7px; font-size:12px; }
-      #board{ gap:4px; }
+      #board{ gap:4px; margin:8px auto 0; }
       .board-row{ gap:4px; }
       .tile{ font-size: clamp(11px, 3.8vw, 18px); border-radius:7px; border-width:1.25px; }
       .kbd-row{ gap:2px; flex-wrap: nowrap; }
-      .key{ padding:6px 4px; min-width:18px; font-size: clamp(9.5px, 3vw, 11px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:36px; }
+      #keyboard{ width:100%; margin:0 auto 10px; }
+      .key{ padding:8.4px 6.3px; min-width:23px; font-size: clamp(12.1px, 3.8vw, 13.6px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:46px; }
     }
 
     @media (max-width: 360px){
@@ -283,9 +284,11 @@
       #rules-panel .rules-list li{ font-size: clamp(10px, 4.2vw, 13px); }
       .segmented .seg{ padding:4px 6px; font-size:11px; }
       .tile{ font-size: clamp(10px, 4.3vw, 16px); }
+      #board{ margin:6px auto 0; }
+      #keyboard{ width:100%; margin:0 auto 8px; }
       .kbd-row{ gap:1px; flex-wrap: nowrap; }
-      .key{ padding:5px 4px; min-width:14px; font-size: clamp(9px, 3.6vw, 10px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:32px; }
+      .key{ padding:6.9px 5.2px; min-width:19px; font-size: clamp(11.4px, 4.55vw, 12.6px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:41px; }
     }
   </style>
 </head>
