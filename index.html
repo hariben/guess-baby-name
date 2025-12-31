@@ -156,7 +156,7 @@
     .key.absent{background:var(--tile-absent);color:white}
 
     /* Status + actions */
-    #status{min-height:22px;text-align:center;margin:6px 0 8px;color:var(--muted);font-weight:600}
+    #status{min-height:22px;text-align:center;margin:6px 0 8px;color:var(--muted);font-weight:600;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
     .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0}
 
     /* Confetti (emoji) */
@@ -180,7 +180,7 @@
     #rules-panel .rules-header{display:flex;align-items:center;justify-content:space-between;font-weight:700;cursor:pointer}
     #rules-panel .chev{transition:transform .2s ease}
     #rules-panel.open .chev{transform:rotate(180deg)}
-    #rules-panel .rules-controls{margin-top:6px;display:flex;justify-content:flex-end}
+    #rules-panel .rules-controls{margin-top:6px;display:none;justify-content:flex-end}
     .segmented{display:inline-flex;background:#e5e7eb;border-radius:12px;padding:2px}
     .segmented .seg{border:0;background:transparent;padding:6px 10px;border-radius:10px;font-weight:600;color:var(--kbd-text);cursor:pointer}
     .segmented .seg.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.06)}
@@ -243,7 +243,7 @@
     /* Mobile layout adjustments: keep content within container and show themed sides */
     @media (max-width: 640px){
       body{ overflow-x:hidden; }
-      .container{ width:70vw; margin:0 auto; }
+      .container{ width:85vw; margin:0 auto; }
       header{ gap:8px; }
       h1{ font-size: clamp(18px, 5.5vw, 26px); }
       .panel{ padding:14px; }
@@ -251,13 +251,13 @@
       #rules-panel .rules-header{ font-size: 15px; }
       #rules-panel .rules-list li{ font-size: clamp(12px, 3.2vw, 15px); line-height: 1.35; }
       .segmented .seg{ padding:5px 8px; font-size:13px; }
-      #board{ width:100%; gap:5px; }
+      #board{ width:100%; gap:5px; margin:12px auto 0; }
       .board-row{ gap:5px; }
       .tile{ height:auto; aspect-ratio:1/1; font-size: clamp(12px, 3.6vw, 20px); border-radius:7px; border-width:1.5px; }
-      #keyboard{ width:100%; margin:12px auto 8px; }
+      #keyboard{ width:100%; margin:0 auto 12px; }
       .kbd-row{ gap:3px; flex-wrap: nowrap; }
-      .key{ padding:7px 5px; min-width:20px; border-radius:8px; font-size: clamp(10px, 2.8vw, 12px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:40px; }
+      .key{ padding:9.5px 7.5px; min-width:25px; border-radius:8px; font-size: clamp(12.6px, 3.6vw, 14.7px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:50px; }
     }
 
     @media (max-width: 480px){
@@ -267,12 +267,13 @@
       #rules-panel .rules-header{ font-size: 14px; }
       #rules-panel .rules-list li{ font-size: clamp(11px, 3.6vw, 14px); }
       .segmented .seg{ padding:4px 7px; font-size:12px; }
-      #board{ gap:4px; }
+      #board{ gap:4px; margin:8px auto 0; }
       .board-row{ gap:4px; }
       .tile{ font-size: clamp(11px, 3.8vw, 18px); border-radius:7px; border-width:1.25px; }
       .kbd-row{ gap:2px; flex-wrap: nowrap; }
-      .key{ padding:6px 4px; min-width:18px; font-size: clamp(9.5px, 3vw, 11px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:36px; }
+      #keyboard{ width:100%; margin:0 auto 10px; }
+      .key{ padding:8.4px 6.3px; min-width:23px; font-size: clamp(12.1px, 3.8vw, 13.6px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:46px; }
     }
 
     @media (max-width: 360px){
@@ -283,9 +284,11 @@
       #rules-panel .rules-list li{ font-size: clamp(10px, 4.2vw, 13px); }
       .segmented .seg{ padding:4px 6px; font-size:11px; }
       .tile{ font-size: clamp(10px, 4.3vw, 16px); }
+      #board{ margin:6px auto 0; }
+      #keyboard{ width:100%; margin:0 auto 8px; }
       .kbd-row{ gap:1px; flex-wrap: nowrap; }
-      .key{ padding:5px 4px; min-width:14px; font-size: clamp(9px, 3.6vw, 10px); }
-      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:32px; }
+      .key{ padding:6.9px 5.2px; min-width:19px; font-size: clamp(11.4px, 4.55vw, 12.6px); }
+      .key[data-code="Enter"], .key[data-code="Backspace"]{ min-width:41px; }
     }
   </style>
 </head>
@@ -296,8 +299,11 @@
         <h1>Guess our baby's name</h1>
       </div>
       <div class="actions">
-        <button id="shareBtn" class="btn muted" title="Copy game link">Share</button>
         <button id="themeToggleBtn" class="btn muted" title="Switch theme">Theme</button>
+        <div id="langToggleTop" class="segmented">
+          <button class="seg on" data-lang="en">English</button>
+          <button class="seg" data-lang="ta">தமிழ்</button>
+        </div>
       </div>
     </header>
 
@@ -338,7 +344,7 @@ Hariram and Sushme (heart)
         </div>
         <div style="flex:1 1 220px; min-width:220px">
           <label for="imageBaseInput">Reveal image name (assets/*.jpg)</label>
-          <input id="imageBaseInput" type="text" placeholder="e.g., default or reveal" value="default" autocomplete="off">
+          <input id="imageBaseInput" type="text" placeholder="e.g., default or reveal" value="say_my_name" autocomplete="off">
         </div>
         <div style="flex:0 1 180px; min-width:160px">
           <label for="themeSelect">Theme</label>
@@ -487,8 +493,10 @@ Hariram and Sushme (heart)
       });
     }
 
-    // Default personal message (also used to decide whether to include message in link)
-    const DEFAULT_MESSAGE = "Hello family and friends,\n\nThis is a personal invitation to find out the name of our Kanmani (baby) (yes, Kanmani is her nickname, not her actual name 😛). A fun/playful activity for you to guess the name and find out! (wink)\nOnce done, please send us a screenshot to let us know in how many tried you find the name! (smile with teeth)\n\nHariram and Sushme ❤️";
+    // Default personal message (localized)
+    const DEFAULT_MESSAGE_EN = "Hello family and friends,\n\nThis is a personal invitation to find out the name of our Kanmani (baby) (yes, Kanmani is her nickname, not her actual name 😛). A fun/playful activity for you to guess the name and find out! (wink)\nOnce done, please send us a screenshot to let us know in how many tries you found the name! (smile with teeth)\n\nWith love,\nHariram and Sushme (heart)";
+    const DEFAULT_MESSAGE_TA = "அன்பான குடும்பத்தினரே மற்றும் நண்பர்களே,\n\nஎங்கள் கண்மணியின் 👶 பெயரைத் தெரிந்துகொள்வதற்கான ஒரு தனிப்பட்ட அழைப்பு இது (ஆமாம், கண்மணி என்பது அவளுடைய செல்லப்பெயர், உண்மையான பெயர் அல்ல 😛). நீங்கள் பெயரை ஊகித்து, கண்டுபிடிப்பதற்காக ஒரு வேடிக்கையான செயல்பாடு! 😉\nகண்டுபிடித்த பிறகு, எத்தனை முயற்சிகளில் நீங்கள் பெயரைக் கண்டுபிடித்தீர்கள் என்பதை எங்களுக்குத் தெரியப்படுத்த, ஒரு ஸ்கிரீன்ஷாட்டையும் அனுப்புங்கள்! 😁\n\nஅன்புடன்,\nஹரிராம் மற்றும் சுஷ்மி ❤️";
+    function defaultMessage(){ return (State.rulesLang==='ta') ? DEFAULT_MESSAGE_TA : DEFAULT_MESSAGE_EN; }
 
     // Obfuscation (casual only, not secure)
     const SALT = 'BBY1:';
@@ -536,7 +544,7 @@ Hariram and Sushme (heart)
       revealUsed: false,
       over: false,
       message: '',
-      imageBase: 'default',
+      imageBase: 'say_my_name',
       rulesLang: 'en',
       msgEditEnabled: false,
       msgUseCustom: false,
@@ -625,6 +633,7 @@ Hariram and Sushme (heart)
       }
     });
 
+    // Mobile keyboard helpers: create a hidden input and focus it on taps
     function ensureMobileInput(){
       let inp = document.getElementById('mobileInput');
       if(!inp){
@@ -671,8 +680,6 @@ Hariram and Sushme (heart)
     }
 
     function focusMobileInput(){
-      const host = document.getElementById('host-panel');
-      if(host && host.hidden === false) return;
       const inp = ensureMobileInput();
       if(document.activeElement !== inp){
         try{ inp.focus({ preventScroll:true }); }catch{ try{ inp.focus(); }catch{} }
@@ -926,10 +933,47 @@ Hariram and Sushme (heart)
       const overlay = $('#winOverlay');
       const imgEl = $('#overlayImg');
       const titleEl = $('#overlayTitle');
-      if(titleEl) titleEl.textContent = guessed ? `You guessed it! It's ${State.secret}.` : `The name is ${State.secret}.`;
+      if(titleEl){
+        const lang = (State.rulesLang==='ta') ? 'ta' : 'en';
+        const tries = guessed ? (State.row + 1) : CONFIG.MAX_GUESSES;
+        let line1 = '';
+        if(lang==='en'){
+          if(!guessed){
+            line1 = "Such a good sport for participating in this game! Here's our final reveal!";
+          } else {
+            switch(tries){
+              case 1: line1 = "Hello, seems you already knew our kutty's name or already played the game!"; break;
+              case 2: line1 = "You are lucky and smart! Just 2 tries!! 🎉🎉"; break;
+              case 3: line1 = "You are the master of this game! 3 tries from you and 3 hurrays for you!!! 🎉🎉🎉"; break;
+              case 4: line1 = "4th try it is! Yaay, you did it!! 🎉"; break;
+              case 5: line1 = "5th try! Can't get better! good game!! 🎉"; break;
+              case 6: line1 = "Right on the last valid try! great game!! 🎉"; break;
+              case 7: line1 = "Winning in super over! Hurray!! 🎉🎉"; break;
+              default: line1 = "Yaay, you did it! 🎉";
+            }
+          }
+        } else {
+          if(!guessed){
+            line1 = "இந்த விளையாட்டில் கலந்து விளையாடியதற்கு நன்றி! இதோ எங்கள் இறுதி வெளிப்பாடு!";
+          } else {
+            switch(tries){
+              case 1: line1 = "வணக்கம், நீங்கள் ஏற்கனவே எங்கள் குட்டியின் பெயரைத் தெரிந்து உள்ளீர்  அல்லது முன்பே விளையாடியிருக்கிறீர்கள் போல! பலே ஆள் தான்!"; break;
+              case 2: line1 = "நீங்கள் அதிர்ஷ்டசாலி மற்றும் புத்திசாலியும் கூட ! வெறும் 2 முயற்சிகளில் வெற்றி !! 🎉🎉"; break;
+              case 3: line1 = "இந்த விளையாட்டின் மாஸ்டர் நீங்கள்தான்! 3 முயற்சிகளில் வெற்றி, உங்களுக்காக மூன்று ஹுர்ரே!!! 🎉🎉🎉"; break;
+              case 4: line1 = "நான்காவது முயற்சிதான்! நீங்கள் வென்றுவிட்டர்கள் !! 🎉"; break;
+              case 5: line1 = "ஐந்தாவது முயற்சி! இதைவிட சிறப்பாக game ஐ  முடிக்க முடியாது! நல்ல விளையாட்டு!! 🎉"; break;
+              case 6: line1 = "கடைசி வரை சென்று வென்று விட்டர்கள்!  அருமையான விளையாட்டு!! 🎉"; break;
+              case 7: line1 = "சூப்பர் ஓவரில் வெற்றி! ஹுறே!! 🎉🎉"; break;
+              default: line1 = "யேய், நீங்கள் வென்றுவிட்டர்கள்! 🎉";
+            }
+          }
+        }
+        const line2 = (lang==='ta') ? `ஆம், எங்கள் குழந்தையின் பெயர் ${State.secret} 💜` : `YES, Our baby's name is ${State.secret} 💜`;
+        titleEl.innerHTML = `<div>${line1}</div><div>${line2}</div>`;
+      }
       if(imgEl){
-        const baseRaw = (State.imageBase && State.imageBase.trim().length) ? State.imageBase.trim() : 'default';
-        const base = (baseRaw.replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '') || 'default');
+        const baseRaw = (State.imageBase && State.imageBase.trim().length) ? State.imageBase.trim() : 'say_my_name';
+        const base = (baseRaw.replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '') || 'say_my_name');
         const src = `./assets/${base}.jpg`;
         imgEl.onerror = ()=>{ imgEl.style.display='none'; };
         imgEl.src = src;
@@ -1029,7 +1073,7 @@ Hariram and Sushme (heart)
         const msgEl = document.getElementById('messageInput');
         const imgBaseEl = document.getElementById('imageBaseInput');
         if(msgEl) State.message = (msgEl.value||'').trim();
-        if(imgBaseEl) State.imageBase = ((imgBaseEl.value||'default').trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'default';
+        if(imgBaseEl) State.imageBase = ((imgBaseEl.value||'say_my_name').trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'say_my_name';
       }
       State.row = 0; State.col = 0; State.over = false;
       State.revealUsed = false; State.lockedFirst = false;
@@ -1037,7 +1081,7 @@ Hariram and Sushme (heart)
       buildBoard();
       // Reset buttons
       $('#revealBtn').disabled = !CONFIG.REVEAL_ENABLED;
-      setStatus('Game started! Type your guess.');
+      setStatus(State.rulesLang==='ta' ? 'ஆரம்பிக்கலாமா? உங்கள் விடைகளை guess செய்யுங்கள்' : 'Game started! Type your guess.');
       renderMessagePanel();
       updateUIForRow();
       focusMobileInput();
@@ -1075,10 +1119,10 @@ Hariram and Sushme (heart)
       // Edit message toggle and change tracking
       const msgEl = document.getElementById('messageInput');
       const editBtn = document.getElementById('editMsgBtn');
-      if(msgEl){ msgEl.value = DEFAULT_MESSAGE; msgEl.readOnly = true; }
+      if(msgEl){ msgEl.value = defaultMessage(); msgEl.readOnly = true; }
       function recomputeMsgUse(){
         const v = (msgEl && msgEl.value ? msgEl.value.trim() : '');
-        State.msgUseCustom = State.msgEditEnabled && (v !== DEFAULT_MESSAGE.trim());
+        State.msgUseCustom = State.msgEditEnabled && (v !== defaultMessage().trim());
       }
       if(msgEl){
         msgEl.addEventListener('input', recomputeMsgUse);
@@ -1156,15 +1200,14 @@ Hariram and Sushme (heart)
         const next = idx>=0 ? arr[(idx+1)%arr.length] : arr[0] || 'space';
         applyTheme(next);
       });
-      const boardEl = document.getElementById('board');
-      if(boardEl){
-        boardEl.addEventListener('click', ()=> focusMobileInput());
-        boardEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
-      }
-      const kbdEl = document.getElementById('keyboard');
-      if(kbdEl){
-        kbdEl.addEventListener('click', ()=> focusMobileInput());
-        kbdEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+      const langTop = document.getElementById('langToggleTop');
+      if (langTop){
+        langTop.querySelectorAll('.seg').forEach(b=>{
+          b.addEventListener('click', ()=>{
+            State.rulesLang = (b.dataset.lang==='ta') ? 'ta' : 'en';
+            applyLanguage();
+          });
+        });
       }
     }
 
@@ -1180,13 +1223,32 @@ Hariram and Sushme (heart)
       wireGlobalButtons();
       wireHostPanel();
       wireRulesPanel();
+      // Mobile keyboard: focus hidden input when tapping board/keyboard
+      const gameEl = document.getElementById('game');
+      if(gameEl){
+        gameEl.addEventListener('click', ()=> focusMobileInput());
+        gameEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+        gameEl.addEventListener('touchend', ()=> focusMobileInput(), { passive: true });
+      }
+      const boardEl = document.getElementById('board');
+      if(boardEl){
+        boardEl.addEventListener('click', ()=> focusMobileInput());
+        boardEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+        boardEl.addEventListener('touchend', ()=> focusMobileInput(), { passive: true });
+      }
+      const kbdEl = document.getElementById('keyboard');
+      if(kbdEl){
+        kbdEl.addEventListener('click', ()=> focusMobileInput());
+        kbdEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+        kbdEl.addEventListener('touchend', ()=> focusMobileInput(), { passive: true });
+      }
       ensureMobileInput();
 
       const p = getParam('p');
       const m = getParam('m');
       const b = getParam('b');
       if(m){ try{ State.message = b64urlDecode(m); }catch{} }
-      if(b){ State.imageBase = (b.trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'default'; }
+      if(b){ State.imageBase = (b.trim().replace(/\.[^/\.]+$/, '').replace(/[^A-Za-z0-9_-]/g, '')) || 'say_my_name'; }
       renderMessagePanel();
       if(p){
         const name = decodeSecret(p);
@@ -1207,13 +1269,14 @@ Hariram and Sushme (heart)
         setStatus(`Enter a ${L}-letter name to start or generate a link.`);
       }
       setRulesLang(State.rulesLang || 'en');
+      applyLanguage();
     }
 
     function renderMessagePanel(){
       const panel = document.getElementById('message-panel');
       const content = document.getElementById('messageContent');
       if(!panel || !content) return;
-      const msg = (State.message && State.message.trim().length) ? State.message : DEFAULT_MESSAGE;
+      const msg = (State.msgUseCustom && State.message && State.message.trim().length) ? State.message : defaultMessage();
       content.textContent = parseEmojis(msg);
       panel.hidden = false;
     }
@@ -1230,6 +1293,33 @@ Hariram and Sushme (heart)
       });
     }
 
+    function applyLanguage(){
+      const lang = (State.rulesLang==='ta') ? 'ta' : 'en';
+      const headerSpan = document.querySelector('#rulesHeader span:first-child');
+      if(headerSpan){ headerSpan.textContent = (lang==='ta') ? 'விளையாட்டு விதிகள்' : 'Game rules'; }
+      setRulesLang(lang);
+      const topSegs = document.querySelectorAll('#langToggleTop .seg');
+      if(topSegs && topSegs.length){
+        topSegs.forEach(b=>{ const on = (b.dataset.lang === State.rulesLang); if(on) b.classList.add('on'); else b.classList.remove('on'); });
+      }
+      // Update default message in host panel if not custom
+      const hostPanelEl = document.getElementById('host-panel');
+      const hostVisible = hostPanelEl && hostPanelEl.hidden === false;
+      const msgEl = document.getElementById('messageInput');
+      if(hostVisible && msgEl && !State.msgUseCustom){ msgEl.value = defaultMessage(); }
+      const stEl = document.getElementById('status');
+      if(stEl){
+        const curr = stEl.textContent ? stEl.textContent.trim() : '';
+        const startEN = 'Game started! Type your guess.';
+        const startTA = 'ஆரம்பிக்கலாமா? உங்கள் விடைகளை guess செய்யுங்கள்';
+        const baseEN = 'Type your guess. Press Enter to submit.';
+        if(curr===startEN || curr===startTA || curr===baseEN){
+          setStatus(lang==='ta' ? startTA : startEN);
+        }
+      }
+      renderMessagePanel();
+    }
+
     function wireRulesPanel(){
       const header = document.getElementById('rulesHeader');
       const panel = document.getElementById('rules-panel');
@@ -1238,7 +1328,7 @@ Hariram and Sushme (heart)
         header.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); panel.classList.toggle('open'); } });
       }
       document.querySelectorAll('#rules-panel .seg').forEach(b=>{
-        b.addEventListener('click', ()=> setRulesLang(b.dataset.lang));
+        b.addEventListener('click', ()=> { State.rulesLang = b.dataset.lang; applyLanguage(); });
       });
     }
 
