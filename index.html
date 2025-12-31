@@ -625,6 +625,60 @@ Hariram and Sushme (heart)
       }
     });
 
+    function ensureMobileInput(){
+      let inp = document.getElementById('mobileInput');
+      if(!inp){
+        inp = document.createElement('input');
+        inp.id = 'mobileInput';
+        inp.type = 'text';
+        inp.setAttribute('inputmode','text');
+        inp.setAttribute('enterkeyhint','enter');
+        inp.setAttribute('autocomplete','off');
+        inp.setAttribute('autocorrect','off');
+        inp.setAttribute('autocapitalize','characters');
+        inp.setAttribute('spellcheck','false');
+        inp.style.position = 'fixed';
+        inp.style.bottom = '0';
+        inp.style.left = '0';
+        inp.style.opacity = '0';
+        inp.style.width = '1px';
+        inp.style.height = '1px';
+        inp.style.fontSize = '16px';
+        document.body.appendChild(inp);
+      }
+      if(!inp._wired){
+        inp.addEventListener('keydown', (e)=>{
+          const key = e.key;
+          if(key==='Enter' || key==='Backspace'){
+            e.preventDefault();
+            handleKey(key);
+          } else if(/^[a-zA-Z]$/.test(key)){
+            e.preventDefault();
+            handleKey(key.toUpperCase());
+          }
+        });
+        inp.addEventListener('input', ()=>{
+          const v = inp.value || '';
+          if(v){
+            const ch = v.slice(-1);
+            if(/[a-zA-Z]/.test(ch)) handleKey(ch.toUpperCase());
+            inp.value = '';
+          }
+        });
+        inp._wired = true;
+      }
+      return inp;
+    }
+
+    function focusMobileInput(){
+      const host = document.getElementById('host-panel');
+      if(host && host.hidden === false) return;
+      const inp = ensureMobileInput();
+      if(document.activeElement !== inp){
+        try{ inp.focus({ preventScroll:true }); }catch{ try{ inp.focus(); }catch{} }
+      }
+    }
+
     function typeLetter(ch){
       const r = State.row; let c = State.col;
       if(r>=CONFIG.MAX_GUESSES) return;
@@ -986,6 +1040,7 @@ Hariram and Sushme (heart)
       setStatus('Game started! Type your guess.');
       renderMessagePanel();
       updateUIForRow();
+      focusMobileInput();
     }
 
     function wireHostPanel(){
@@ -1101,6 +1156,16 @@ Hariram and Sushme (heart)
         const next = idx>=0 ? arr[(idx+1)%arr.length] : arr[0] || 'space';
         applyTheme(next);
       });
+      const boardEl = document.getElementById('board');
+      if(boardEl){
+        boardEl.addEventListener('click', ()=> focusMobileInput());
+        boardEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+      }
+      const kbdEl = document.getElementById('keyboard');
+      if(kbdEl){
+        kbdEl.addEventListener('click', ()=> focusMobileInput());
+        kbdEl.addEventListener('touchstart', ()=> focusMobileInput(), { passive: true });
+      }
     }
 
     // Init
@@ -1115,6 +1180,7 @@ Hariram and Sushme (heart)
       wireGlobalButtons();
       wireHostPanel();
       wireRulesPanel();
+      ensureMobileInput();
 
       const p = getParam('p');
       const m = getParam('m');
