@@ -686,6 +686,15 @@ Hariram and Sushme (heart)
       }
     }
 
+    function blurMobileInput(){
+      const inp = document.getElementById('mobileInput');
+      try{ if(inp) inp.blur(); }catch{}
+      const ae = document.activeElement;
+      if(ae && (ae.tagName==='INPUT' || ae.tagName==='TEXTAREA' || ae.isContentEditable)){
+        try{ ae.blur(); }catch{}
+      }
+    }
+
     function typeLetter(ch){
       const r = State.row; let c = State.col;
       if(r>=CONFIG.MAX_GUESSES) return;
@@ -980,10 +989,12 @@ Hariram and Sushme (heart)
         imgEl.style.display='';
       }
       if(overlay){
+        blurMobileInput();
+        setTimeout(blurMobileInput, 50);
         overlay.classList.remove('hidden');
         void overlay.offsetWidth; // reflow for transition
         overlay.classList.add('show');
-        const close = ()=>{ overlay.classList.remove('show'); setTimeout(()=> overlay.classList.add('hidden'), 2000); };
+        const close = ()=>{ blurMobileInput(); overlay.classList.remove('show'); setTimeout(()=> overlay.classList.add('hidden'), 2000); };
         overlay.addEventListener('click', close, { once:true });
         setTimeout(close, 6000);
       }
