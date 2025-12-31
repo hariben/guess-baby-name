@@ -826,7 +826,7 @@ Hariram and Sushme (heart)
           decor.appendChild(s);
         }
         // black hole GIF bottom-left
-        const holeGif = el('img', { className:'black-hole-gif', src: 'assets/interstellar.gif', alt: 'Black hole' });
+        const holeGif = el('img', { className:'black-hole-gif', src: 'assets/blackhole.gif', alt: 'Black hole' });
         holeGif.onerror = ()=>{ if(holeGif.parentNode) holeGif.parentNode.removeChild(holeGif); };
         decor.appendChild(holeGif);
         // planets on sides (no emoji star), strictly avoid left-bottom half (left < 50vw AND top > 50vh)
